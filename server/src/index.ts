@@ -1,0 +1,56 @@
+import express from "express";
+import path from "path";
+import { config } from "./utils/config";
+import { errorHandler } from "./middleware/errorHandler";
+import authRoutes from "./routes/auth.routes";
+import urlRoutes from "./routes/url.routes";
+import { startCronScheduler } from "./cron";
+
+const app = express();
+
+// Body parser
+app.use(express.json({ limit: "10mb" }));
+
+// Health check
+app.get("/health", (_req, res) => {
+    res.status(200).json({
+        status: "ok",
+        service: "watchlane",
+        timestamp: new Date().toISOString(),
+    });
+});
+
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/urls", urlRoutes);
+
+// Provide API 404 handler
+app.use("/api", (_req, res) => {
+    res.status(404).json({
+        success: false,
+        error: "Route not found",
+    });
+});
+
+// Serve frontend in production
+if (config.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../../client/dist")));
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../../client/dist/index.html"));
+    });
+}
+
+// Global error handler
+app.use(errorHandler);
+
+// Start server
+app.listen(config.PORT, () => {
+    console.log(
+        `🚀 Watchlane API running on port ${config.PORT} [${config.NODE_ENV}]`
+    );
+
+    // Start cron scheduler
+    startCronScheduler();
+});
+
+export default app;

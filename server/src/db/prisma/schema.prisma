@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  createdAt    DateTime      @default(now())
+  apiKeys      ApiKey[]
+  monitoredUrls MonitoredUrl[]
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([key])
+}
+
+model MonitoredUrl {
+  id                 String     @id @default(uuid())
+  url                String
+  label              String?
+  checkIntervalHours Int        @default(6)
+  isActive           Boolean    @default(true)
+  userId             String
+  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snapshots          Snapshot[]
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+model Snapshot {
+  id             String       @id @default(uuid())
+  monitoredUrlId String
+  monitoredUrl   MonitoredUrl @relation(fields: [monitoredUrlId], references: [id], onDelete: Cascade)
+  contentHash    String
+  contentText    String
+  diff           String?
+  createdAt      DateTime     @default(now())
+
+  @@index([monitoredUrlId, createdAt(sort: Desc)])
+}
