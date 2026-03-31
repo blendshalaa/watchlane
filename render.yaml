@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: watchlane-dashboard
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # You will paste your Neon/Supabase Postgres URL in the Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RESEND_API_KEY
+        sync: false # You will paste your Resend API key in the Render dashboard
