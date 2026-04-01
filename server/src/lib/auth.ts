@@ -15,7 +15,8 @@ export const auth = betterAuth({
     databaseHooks: {
         account: {
             create: {
-                after: async (account) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                after: async (account: any) => {
                     // Sync the Google ID explicitly onto our User table as requested
                     if (account.providerId === "google") {
                         await prisma.user.update({
