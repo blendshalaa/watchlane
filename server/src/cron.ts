@@ -1,6 +1,6 @@
 import cron from "node-cron";
-import prisma from "./db/prismaClient";
-import { checkUrl } from "./services/monitor.service";
+import prisma from "./db/prisma/client.js";
+import { checkUrl } from "./services/monitor.service.js";
 
 let isRunning = false;
 

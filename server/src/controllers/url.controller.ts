@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
-import { AuthRequest, CreateUrlBody, UpdateUrlBody } from "../types";
-import { AppError } from "../utils/AppError";
-import * as urlService from "../services/url.service";
+import { AuthRequest, CreateUrlBody, UpdateUrlBody } from "../types.js";
+import { AppError } from "../utils/AppError.js";
+import * as urlService from "../services/url.service.js";
 
 export async function createUrl(
     req: AuthRequest,

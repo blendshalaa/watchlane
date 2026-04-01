@@ -1,8 +1,8 @@
 import crypto from "crypto";
-import prisma from "../db/prismaClient";
-import { scrapeUrl } from "./scraper.service";
-import { computeDiff } from "./diff.service";
-import { sendChangeAlert } from "./email.service";
+import prisma from "../db/prisma/client.js";
+import { scrapeUrl } from "./scraper.service.js";
+import { computeDiff } from "./diff.service.js";
+import { sendChangeAlert } from "./email.service.js";
 
 export async function checkUrl(monitoredUrlId: string): Promise<{
     changed: boolean;

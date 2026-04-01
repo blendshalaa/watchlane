@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { authenticateJwt } from "../middleware/auth.middleware";
-import * as urlController from "../controllers/url.controller";
+import { authenticateJwt } from "../middleware/auth.middleware.js";
+import * as urlController from "../controllers/url.controller.js";
 
 const router = Router();
 

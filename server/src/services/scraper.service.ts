@@ -1,4 +1,5 @@
 import { chromium, Browser } from "playwright";
+import { AppError } from "../utils/AppError.js";
 
 let browser: Browser | null = null;
 

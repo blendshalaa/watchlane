@@ -1,12 +1,16 @@
 import express from "express";
 import path from "path";
-import { config } from "./utils/config";
-import { errorHandler } from "./middleware/errorHandler";
-import authRoutes from "./routes/auth.routes";
-import urlRoutes from "./routes/url.routes";
-import { startCronScheduler } from "./cron";
-import { auth } from "./lib/auth";
+import { fileURLToPath } from "url";
+import { config } from "./utils/config.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import authRoutes from "./routes/auth.routes.js";
+import urlRoutes from "./routes/url.routes.js";
+import { startCronScheduler } from "./cron.js";
+import { auth } from "./lib/auth.js";
 import { toNodeHandler } from "better-auth/node";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 

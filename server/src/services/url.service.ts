@@ -1,6 +1,6 @@
-import prisma from "../db/prismaClient";
-import { CreateUrlBody, UpdateUrlBody } from "../types";
-import { AppError } from "../utils/AppError";
+import prisma from "../db/prisma/client.js";
+import { CreateUrlBody, UpdateUrlBody } from "../types.js";
+import { AppError } from "../utils/AppError.js";
 
 export async function createMonitoredUrl(
     userId: string,

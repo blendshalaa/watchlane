@@ -1,20 +1,20 @@
 import { Resend } from "resend";
-import { config } from "../utils/config";
-import { DiffResult } from "./diff.service";
+import { config } from "../utils/config.js";
+import { DiffResult } from "./diff.service.js";
 
 const resend = new Resend(config.RESEND_API_KEY);
 
 export async function sendChangeAlert(
-    recipientEmail: string,
-    url: string,
-    label: string | null,
-    diffResult: DiffResult
+  recipientEmail: string,
+  url: string,
+  label: string | null,
+  diffResult: DiffResult
 ): Promise<void> {
-    const displayName = label ?? url;
+  const displayName = label ?? url;
 
-    const subject = `🔔 Watchlane: Change detected on ${displayName}`;
+  const subject = `🔔 Watchlane: Change detected on ${displayName}`;
 
-    const htmlBody = `
+  const htmlBody = `
     <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #1a1a2e;">🔔 Content Change Detected</h2>
       <p>Watchlane detected changes on a page you're monitoring:</p>
@@ -46,25 +46,25 @@ export async function sendChangeAlert(
     </div>
   `;
 
-    try {
-        await resend.emails.send({
-            from: config.RESEND_FROM_EMAIL,
-            to: recipientEmail,
-            subject,
-            html: htmlBody,
-        });
+  try {
+    await resend.emails.send({
+      from: config.RESEND_FROM_EMAIL,
+      to: recipientEmail,
+      subject,
+      html: htmlBody,
+    });
 
-        console.log(`[Email] Change alert sent to ${recipientEmail} for ${url}`);
-    } catch (error) {
-        console.error(`[Email] Failed to send alert to ${recipientEmail}:`, error);
-    }
+    console.log(`[Email] Change alert sent to ${recipientEmail} for ${url}`);
+  } catch (error) {
+    console.error(`[Email] Failed to send alert to ${recipientEmail}:`, error);
+  }
 }
 
 function escapeHtml(text: string): string {
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
