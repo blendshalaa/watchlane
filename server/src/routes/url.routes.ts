@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { authenticateApiKey } from "../middleware/authMiddleware";
+import { authenticateJwt } from "../middleware/auth.middleware";
 import * as urlController from "../controllers/url.controller";
 
 const router = Router();
 
-// All URL routes require API key authentication
-router.use(authenticateApiKey);
+// All URL routes require session authentication
+router.use(authenticateJwt);
 
 // POST /api/urls — Add a URL to monitor
 router.post("/", urlController.createUrl);

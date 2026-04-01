@@ -5,6 +5,8 @@ import { errorHandler } from "./middleware/errorHandler";
 import authRoutes from "./routes/auth.routes";
 import urlRoutes from "./routes/url.routes";
 import { startCronScheduler } from "./cron";
+import { auth } from "./lib/auth";
+import { toNodeHandler } from "better-auth/node";
 
 const app = express();
 
@@ -22,6 +24,7 @@ app.get("/health", (_req, res) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/urls", urlRoutes);
 
 // Provide API 404 handler
