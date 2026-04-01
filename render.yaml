@@ -8,8 +8,14 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        sync: false # You will paste your Neon/Supabase Postgres URL in the Render dashboard
-      - key: JWT_SECRET
-        generateValue: true
+        sync: false
       - key: RESEND_API_KEY
-        sync: false # You will paste your Resend API key in the Render dashboard
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: BETTER_AUTH_URL
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
