@@ -12,6 +12,9 @@ import { toNodeHandler } from "better-auth/node";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+console.log(`[Startup] Initializing server in ${config.NODE_ENV} mode...`);
+console.log(`[Startup] Better Auth URL: ${process.env.BETTER_AUTH_URL || "NOT SET"}`);
+
 const app = express();
 
 // Body parser
