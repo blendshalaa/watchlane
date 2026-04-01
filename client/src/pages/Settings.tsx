@@ -1,14 +1,19 @@
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Settings() {
-    const { apiKey, setApiKey } = useAuth();
+    const { user } = useAuth();
 
-    const handleLogout = () => {
-        setApiKey(null);
+    const handleLogout = async () => {
+        const API_BASE = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
+        // We use a form-style POST to the Better Auth sign-out endpoint
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `${API_BASE}/auth/logout`;
+        document.body.appendChild(form);
+        form.submit();
     };
 
     return (
@@ -20,15 +25,21 @@ export default function Settings() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>API Key</CardTitle>
+                    <CardTitle>Profile</CardTitle>
                     <CardDescription>
-                        Your current API Key used for authenticating requests. Keep this private.
+                        Your personal information linked to Google.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                        <Label>Current Key</Label>
-                        <Input type="password" value={apiKey || ''} readOnly />
+                <CardContent className="space-y-6">
+                    <div className="flex items-center gap-4">
+                        <Avatar className="h-16 w-16">
+                            <AvatarImage src={user?.image || ''} alt={user?.name || ''} />
+                            <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="text-lg font-medium">{user?.name || 'Watchlane User'}</p>
+                            <p className="text-sm text-muted-foreground">{user?.email}</p>
+                        </div>
                     </div>
                 </CardContent>
                 <CardFooter className="border-t px-6 py-4">

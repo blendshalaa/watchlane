@@ -24,8 +24,16 @@ const navigation = [
 ];
 
 export default function DashboardLayout() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
     const location = useLocation();
+
+    if (isLoading) {
+        return (
+            <div className="flex h-screen w-full items-center justify-center bg-background text-muted-foreground animate-pulse">
+                Checking session...
+            </div>
+        );
+    }
 
     if (!isAuthenticated) {
         return <Navigate to="/login" replace />;

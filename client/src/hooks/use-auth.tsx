@@ -1,16 +1,20 @@
-import { useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../lib/api";
 
 export function useAuth() {
-    const [apiKey, setApiKeyState] = useState<string | null>(() => localStorage.getItem("watchlane-api-key"));
+    const { data, isLoading, error, refetch } = useQuery({
+        queryKey: ["auth-me"],
+        queryFn: () => api.getMe(),
+        retry: false,
+    });
 
-    const setApiKey = useCallback((key: string | null) => {
-        if (key) {
-            localStorage.setItem("watchlane-api-key", key);
-        } else {
-            localStorage.removeItem("watchlane-api-key");
-        }
-        setApiKeyState(key);
-    }, []);
+    const isAuthenticated = !!data?.success && !!data.user;
 
-    return { apiKey, setApiKey, isAuthenticated: !!apiKey };
+    return {
+        user: data?.user,
+        isLoading,
+        error,
+        isAuthenticated,
+        refetch
+    };
 }

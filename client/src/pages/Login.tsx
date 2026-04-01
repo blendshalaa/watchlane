@@ -1,50 +1,47 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
+import { Navigate } from 'react-router-dom';
 
 export default function Login() {
-    const [key, setKey] = useState('');
-    const { setApiKey } = useAuth();
-    const navigate = useNavigate();
+    const { isAuthenticated, isLoading } = useAuth();
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!key.trim()) {
-            toast.error('Please enter a valid API Key');
-            return;
-        }
-        setApiKey(key.trim());
-        toast.success('Successfully logged in');
-        navigate('/overview');
+    if (isLoading) {
+        return (
+            <div className="flex bg-background items-center justify-center min-h-svh w-full p-4 text-muted-foreground animate-pulse">
+                Loading...
+            </div>
+        );
+    }
+
+    if (isAuthenticated) {
+        return <Navigate to="/overview" replace />;
+    }
+
+    const handleGoogleLogin = () => {
+        const API_BASE = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
+        window.location.href = `${API_BASE}/auth/google`;
     };
 
     return (
         <div className="flex bg-background items-center justify-center min-h-svh w-full p-4">
             <Card className="w-full max-w-sm">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold">Watchlane</CardTitle>
-                    <CardDescription>Enter your API key to access your dashboard.</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-center">Watchlane</CardTitle>
+                    <CardDescription className="text-center">Securely monitor your competitors with automated alerts.</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleLogin} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="apiKey">API Key</Label>
-                            <Input
-                                id="apiKey"
-                                type="password"
-                                placeholder="wl_xxxxxxxxxxxxxxx"
-                                value={key}
-                                onChange={(e) => setKey(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <Button type="submit" className="w-full">Sign In</Button>
-                    </form>
+                <CardContent className="flex flex-col gap-4">
+                    <Button
+                        size="lg"
+                        variant="default"
+                        className="w-full font-semibold"
+                        onClick={handleGoogleLogin}
+                    >
+                        Sign in with Google
+                    </Button>
+                    <p className="text-xs text-center text-muted-foreground">
+                        Single Sign-On powered by Better Auth.
+                    </p>
                 </CardContent>
             </Card>
         </div>

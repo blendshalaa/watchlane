@@ -7,23 +7,17 @@ type RequestOptions = Omit<RequestInit, 'body'> & {
 };
 
 export const fetchWithAuth = async (endpoint: string, options: RequestOptions = {}) => {
-    const apiKey = localStorage.getItem("watchlane-api-key");
-
     const headers: HeadersInit = {
         "Content-Type": "application/json",
         ...(options.headers || {}),
     };
-
-    if (apiKey) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (headers as any)["x-api-key"] = apiKey;
-    }
 
     const { body, ...restOptions } = options;
 
     const response = await fetch(`${API_BASE}${endpoint}`, {
         ...restOptions,
         headers,
+        credentials: "include",
         body: body ? JSON.stringify(body) : undefined,
     });
 
@@ -46,4 +40,7 @@ export const api = {
 
     // Snapshot history
     getSnapshots: (urlId: string) => fetchWithAuth(`/urls/${urlId}/snapshots`),
+
+    // Auth
+    getMe: () => fetchWithAuth("/auth/me"),
 };
