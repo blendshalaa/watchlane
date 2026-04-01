@@ -9,16 +9,6 @@ export interface AuthRequest extends Request {
     user?: AuthPayload;
 }
 
-export interface RegisterBody {
-    email: string;
-    password: string;
-}
-
-export interface LoginBody {
-    email: string;
-    password: string;
-}
-
 export interface CreateUrlBody {
     url: string;
     label?: string;
@@ -34,7 +24,6 @@ export interface UpdateUrlBody {
 
 export interface EnvConfig {
     DATABASE_URL: string;
-    JWT_SECRET: string;
     RESEND_API_KEY: string;
     RESEND_FROM_EMAIL: string;
     CRON_INTERVAL_HOURS: number;
