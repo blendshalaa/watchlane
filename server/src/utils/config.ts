@@ -13,7 +13,6 @@ function getEnvVar(key: string, fallback?: string): string {
 
 export const config: EnvConfig = {
     DATABASE_URL: getEnvVar("DATABASE_URL"),
-    JWT_SECRET: getEnvVar("JWT_SECRET"),
     RESEND_API_KEY: getEnvVar("RESEND_API_KEY"),
     RESEND_FROM_EMAIL: getEnvVar("RESEND_FROM_EMAIL", "onboarding@resend.dev"),
     CRON_INTERVAL_HOURS: parseInt(getEnvVar("CRON_INTERVAL_HOURS", "1"), 10),
