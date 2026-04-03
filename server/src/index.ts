@@ -22,9 +22,6 @@ process.on("unhandledRejection", (reason, promise) => {
     process.exit(1);
 });
 
-console.log(`[Startup] Initializing server in ${config.NODE_ENV} mode...`);
-console.log(`[Startup] Better Auth URL: ${process.env.BETTER_AUTH_URL || "NOT SET"}`);
-
 const app = express();
 
 // Body parser
