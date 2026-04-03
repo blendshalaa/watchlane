@@ -37,7 +37,15 @@ app.get("/health", (_req, res) => {
 });
 
 // Routes
-app.use("/api/auth", authRoutes);
+// auth routes and aliases
+app.get("/api/auth/google", (req, res) => {
+    res.redirect("/api/auth/sign-in/social?provider=google");
+});
+
+app.get("/api/auth/callback", (req, res) => {
+    res.redirect("/api/auth/callback/google");
+});
+
 app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/urls", urlRoutes);
 
