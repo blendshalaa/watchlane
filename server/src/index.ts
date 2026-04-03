@@ -46,11 +46,13 @@ app.get("/api/auth/callback", (req, res) => {
     res.redirect("/api/auth/callback/google");
 });
 
-app.all("/api/auth/*", toNodeHandler(auth));
+app.use("/api/auth", toNodeHandler(auth));
+
 app.use("/api/urls", urlRoutes);
 
 // Provide API 404 handler
-app.use("/api", (_req, res) => {
+app.use("/api", (req, res) => {
+    console.warn(`[404] API Route Not Found: ${req.method} ${req.originalUrl}`);
     res.status(404).json({
         success: false,
         error: "Route not found",
