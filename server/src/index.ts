@@ -24,20 +24,7 @@ process.on("unhandledRejection", (reason, promise) => {
 
 const app = express();
 
-// Body parser
-app.use(express.json({ limit: "10mb" }));
-
-// Health check
-app.get("/health", (_req, res) => {
-    res.status(200).json({
-        status: "ok",
-        service: "watchlane",
-        timestamp: new Date().toISOString(),
-    });
-});
-
-// Routes
-// auth routes and aliases
+// 1. Better Auth must come BEFORE express.json() to handle raw bodies correctly
 app.get("/api/auth/google", (req, res) => {
     res.redirect("/api/auth/sign-in/social?provider=google");
 });
@@ -47,6 +34,19 @@ app.get("/api/auth/callback", (req, res) => {
 });
 
 app.use("/api/auth", toNodeHandler(auth));
+
+// 2. Body parser for all other routes
+app.use(express.json({ limit: "10mb" }));
+
+// 3. Middlewares and other routes
+// Health check
+app.get("/health", (_req, res) => {
+    res.status(200).json({
+        status: "ok",
+        service: "watchlane",
+        timestamp: new Date().toISOString(),
+    });
+});
 
 app.use("/api/urls", urlRoutes);
 
