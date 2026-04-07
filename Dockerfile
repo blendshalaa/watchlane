@@ -21,5 +21,5 @@ RUN cd server && npx playwright install chromium
 # Expose the API port
 EXPOSE 3000
 
-# Start the centralized Express server
-CMD ["npm", "start"]
+# At runtime: push schema to database, then start the server
+CMD cd server && npx prisma db push --skip-generate && cd .. && npm start

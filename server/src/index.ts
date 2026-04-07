@@ -25,6 +25,20 @@ const app = express();
 
 // 1. Better Auth handler MUST come before express.json() and uses app.all
 //    to preserve the full URL path (app.use strips the mount prefix).
+app.get("/api/auth/me", async (req, res) => {
+    try {
+        const session = await auth.api.getSession({
+            headers: req.headers
+        });
+        if (!session) {
+            return res.status(401).json({ success: false, error: "Not logged in" });
+        }
+        res.status(200).json({ success: true, user: session.user });
+    } catch (error) {
+        res.status(500).json({ success: false, error: "Error retrieving session" });
+    }
+});
+
 app.all("/api/auth/*", (req, res, next) => {
     console.log(`[Auth] ${req.method} ${req.originalUrl}`);
     next();

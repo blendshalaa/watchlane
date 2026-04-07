@@ -40,7 +40,4 @@ export const api = {
 
     // Snapshot history
     getSnapshots: (urlId: string) => fetchWithAuth(`/urls/${urlId}/snapshots`),
-
-    // Auth
-    getMe: () => fetchWithAuth("/auth/me"),
 };
