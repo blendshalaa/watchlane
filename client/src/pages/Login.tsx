@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { authClient } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,8 @@ import { Navigate } from 'react-router-dom';
 
 export default function Login() {
     const { isAuthenticated, isLoading } = useAuth();
+    const [loginError, setLoginError] = useState<string | null>(null);
+    const [isSigningIn, setIsSigningIn] = useState(false);
 
     if (isLoading) {
         return (
@@ -20,10 +23,24 @@ export default function Login() {
     }
 
     const handleGoogleLogin = async () => {
-        await authClient.signIn.social({
-            provider: "google",
-            callbackURL: "/overview",
-        });
+        setLoginError(null);
+        setIsSigningIn(true);
+        try {
+            const result = await authClient.signIn.social({
+                provider: "google",
+                callbackURL: "/overview",
+            });
+
+            if (result.error) {
+                setLoginError(result.error.message || "Sign-in failed");
+                setIsSigningIn(false);
+            }
+            // If successful, Better Auth will redirect the browser automatically
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "An unexpected error occurred";
+            setLoginError(message);
+            setIsSigningIn(false);
+        }
     };
 
     return (
@@ -34,13 +51,19 @@ export default function Login() {
                     <CardDescription className="text-center">Securely monitor your competitors with automated alerts.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
+                    {loginError && (
+                        <p className="text-sm text-center text-destructive bg-destructive/10 p-2 rounded-md">
+                            {loginError}
+                        </p>
+                    )}
                     <Button
                         size="lg"
                         variant="default"
                         className="w-full font-semibold"
                         onClick={handleGoogleLogin}
+                        disabled={isSigningIn}
                     >
-                        Sign in with Google
+                        {isSigningIn ? "Redirecting..." : "Sign in with Google"}
                     </Button>
                     <p className="text-xs text-center text-muted-foreground">
                         Single Sign-On powered by Better Auth.
