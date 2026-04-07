@@ -3,7 +3,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "./utils/config.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-import authRoutes from "./routes/auth.routes.js";
 import urlRoutes from "./routes/url.routes.js";
 import { startCronScheduler } from "./cron.js";
 import { auth } from "./lib/auth.js";
@@ -24,21 +23,13 @@ process.on("unhandledRejection", (reason, promise) => {
 
 const app = express();
 
-// 1. Better Auth must come BEFORE express.json() to handle raw bodies correctly
-app.get("/api/auth/google", (req, res) => {
-    res.redirect("/api/auth/sign-in/social?provider=google");
-});
-
-app.get("/api/auth/callback", (req, res) => {
-    res.redirect("/api/auth/callback/google");
-});
-
-app.use("/api/auth", toNodeHandler(auth));
+// 1. Better Auth handler MUST come before express.json() and uses app.all
+//    to preserve the full URL path (app.use strips the mount prefix).
+app.all("/api/auth/*", toNodeHandler(auth));
 
 // 2. Body parser for all other routes
 app.use(express.json({ limit: "10mb" }));
 
-// 3. Middlewares and other routes
 // Health check
 app.get("/health", (_req, res) => {
     res.status(200).json({

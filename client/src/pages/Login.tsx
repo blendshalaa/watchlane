@@ -1,4 +1,5 @@
 import { useAuth } from '@/hooks/use-auth';
+import { authClient } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Navigate } from 'react-router-dom';
@@ -18,9 +19,11 @@ export default function Login() {
         return <Navigate to="/overview" replace />;
     }
 
-    const handleGoogleLogin = () => {
-        const API_BASE = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
-        window.location.href = `${API_BASE}/auth/google`;
+    const handleGoogleLogin = async () => {
+        await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/overview",
+        });
     };
 
     return (
