@@ -25,7 +25,10 @@ const app = express();
 
 // 1. Better Auth handler MUST come before express.json() and uses app.all
 //    to preserve the full URL path (app.use strips the mount prefix).
-app.all("/api/auth/*", toNodeHandler(auth));
+app.all("/api/auth/*", (req, res, next) => {
+    console.log(`[Auth] ${req.method} ${req.originalUrl}`);
+    next();
+}, toNodeHandler(auth));
 
 // 2. Body parser for all other routes
 app.use(express.json({ limit: "10mb" }));

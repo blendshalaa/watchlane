@@ -32,12 +32,14 @@ export default function Login() {
             });
 
             if (result.error) {
-                setLoginError(result.error.message || "Sign-in failed");
+                console.error("Better Auth sign-in error:", result.error);
+                setLoginError(result.error.message || result.error.statusText || JSON.stringify(result.error));
                 setIsSigningIn(false);
             }
             // If successful, Better Auth will redirect the browser automatically
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "An unexpected error occurred";
+            console.error("Login exception:", err);
+            const message = err instanceof Error ? err.message : JSON.stringify(err);
             setLoginError(message);
             setIsSigningIn(false);
         }
