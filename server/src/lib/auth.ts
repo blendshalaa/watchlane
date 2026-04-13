@@ -23,17 +23,23 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         },
     },
+    secret: process.env.BETTER_AUTH_SECRET as string,
     databaseHooks: {
         account: {
             create: {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 after: async (account: any) => {
-                    // Sync the Google ID explicitly onto our User table as requested
-                    if (account.providerId === "google") {
-                        await prisma.user.update({
-                            where: { id: account.userId },
-                            data: { googleId: account.accountId }
-                        });
+                    try {
+                        // Sync the Google ID explicitly onto our User table as requested
+                        if (account.providerId === "google") {
+                            await prisma.user.update({
+                                where: { id: account.userId },
+                                data: { googleId: account.accountId }
+                            });
+                        }
+                    } catch (hookError) {
+                        console.error("[Auth Hook] Error syncing Google ID:", hookError);
+                        // We don't throw here to avoid blocking sign-in if just the hook fails
                     }
                 }
             }
