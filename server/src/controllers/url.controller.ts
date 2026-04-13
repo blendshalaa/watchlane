@@ -19,7 +19,7 @@ export async function createUrl(
         }
 
         const monitoredUrl = await urlService.createMonitoredUrl(
-            req.user.userId,
+            req.user.id,
             body
         );
 
@@ -42,7 +42,7 @@ export async function listUrls(
             throw new AppError("Authentication required", 401);
         }
 
-        const urls = await urlService.getUserUrls(req.user.userId);
+        const urls = await urlService.getUserUrls(req.user.id);
 
         res.status(200).json({
             success: true,
@@ -63,7 +63,7 @@ export async function getUrl(
             throw new AppError("Authentication required", 401);
         }
 
-        const url = await urlService.getUrlById(req.user.userId, req.params.id as string);
+        const url = await urlService.getUrlById(req.user.id, req.params.id as string);
 
         res.status(200).json({
             success: true,
@@ -86,7 +86,7 @@ export async function updateUrl(
 
         const body = req.body as UpdateUrlBody;
         const url = await urlService.updateUrl(
-            req.user.userId,
+            req.user.id,
             req.params.id as string,
             body
         );
@@ -110,7 +110,7 @@ export async function deleteUrl(
             throw new AppError("Authentication required", 401);
         }
 
-        await urlService.deleteUrl(req.user.userId, req.params.id as string);
+        await urlService.deleteUrl(req.user.id, req.params.id as string);
 
         res.status(200).json({
             success: true,
@@ -135,7 +135,7 @@ export async function getSnapshots(
         const limit = parseInt(req.query.limit as string) || 20;
 
         const result = await urlService.getUrlSnapshots(
-            req.user.userId,
+            req.user.id,
             req.params.id as string,
             page,
             limit
