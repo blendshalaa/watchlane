@@ -1,4 +1,5 @@
 import { useAuth } from '@/hooks/use-auth';
+import { authClient } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -7,13 +8,13 @@ export default function Settings() {
     const { user } = useAuth();
 
     const handleLogout = async () => {
-        const API_BASE = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
-        // We use a form-style POST to the Better Auth sign-out endpoint
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = `${API_BASE}/auth/logout`;
-        document.body.appendChild(form);
-        form.submit();
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    window.location.href = "/login";
+                }
+            }
+        });
     };
 
     return (
