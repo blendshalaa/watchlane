@@ -65,7 +65,7 @@ if (config.NODE_ENV === "production") {
 app.use(errorHandler);
 
 // Start server
-app.listen(config.PORT, () => {
+app.listen(config.PORT, "0.0.0.0", () => {
     console.log(
         `🚀 Watchlane API running on port ${config.PORT} [${config.NODE_ENV}]`
     );
