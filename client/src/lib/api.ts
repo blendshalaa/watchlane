@@ -26,7 +26,8 @@ export const fetchWithAuth = async (endpoint: string, options: RequestOptions = 
         throw new Error(errorData.error || response.statusText || "An API error occurred");
     }
 
-    return response.json();
+    const json = await response.json();
+    return json.success && json.data !== undefined ? json.data : json;
 };
 
 export const api = {
