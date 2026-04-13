@@ -2,12 +2,15 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "../db/prisma/client.js";
 
-let baseURL = process.env.BETTER_AUTH_URL || "http://localhost:3000";
+let baseURL = process.env.BETTER_AUTH_URL || process.env.RENDER_EXTERNAL_URL || "http://localhost:3000";
 
 // Robust check for Render environment and placeholder values
 if (process.env.NODE_ENV === "production" && (!baseURL.startsWith("http") || baseURL.includes("this-is-my-watch"))) {
     baseURL = "https://watchlane-dashboard.onrender.com";
 }
+
+// Remove trailing slash to prevent double slashes in Better Auth paths
+baseURL = baseURL.replace(/\/$/, "");
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
