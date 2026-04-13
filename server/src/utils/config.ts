@@ -18,4 +18,5 @@ export const config: EnvConfig = {
     CRON_INTERVAL_HOURS: parseInt(getEnvVar("CRON_INTERVAL_HOURS", "1"), 10),
     PORT: parseInt(getEnvVar("PORT", "3000"), 10),
     NODE_ENV: getEnvVar("NODE_ENV", "development"),
+    DIRECT_URL: process.env.DIRECT_URL,
 };

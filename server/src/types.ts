@@ -29,4 +29,5 @@ export interface EnvConfig {
     CRON_INTERVAL_HOURS: number;
     PORT: number;
     NODE_ENV: string;
+    DIRECT_URL?: string;
 }
